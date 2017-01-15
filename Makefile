@@ -1,3 +1,4 @@
+#TODO this makefile is copied from control make it work
 ARDLIB_DIR = arduino
 ARDLIB_SOURCEDIR = $(ARDLIB_DIR)/src
 ARDLIB_BUILDDIR = $(ARDLIB_DIR)/build

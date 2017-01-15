@@ -15,15 +15,14 @@ int time;
 int logs[MAX_LOG];
 
 void log() {
-  
-  if(time => MAX_LOG)
-  {
-    t.stop(tick);
-    return;
-  }
-  logs[time] = (baro.getAltitude() - zero) * LOG_SCALE;
+	//TODO compress based on predictability of data
+	if(time => MAX_LOG) {
+		t.stop(tick);
+		return;
+	}
+	logs[time] = (baro.getAltitude() - zero) * LOG_SCALE;
 
-  time++;
+	time++;
 }
 
 void start_log() {
@@ -32,4 +31,12 @@ void start_log() {
     currTime=0;
     //logs
     tick = t.every(LOG_MS, log);
+}
+
+float get_height() {
+	return baro.getAltitude() - zero;
+}
+
+void update_timer() {
+	t.update();
 }

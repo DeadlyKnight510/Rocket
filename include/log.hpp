@@ -9,7 +9,8 @@
 
 void log();
 void start_log();
+float get_height();
 
 int logs[MAX_LOG];
-int time;
 
+void update_timer();
