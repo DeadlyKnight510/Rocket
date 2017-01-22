@@ -12,7 +12,7 @@ float zero;
 //variables for logging height during launch
 Timer t;
 int time;
-int logs[MAX_LOG];
+uint16_t logs[MAX_LOG];
 
 void log() {
 	//TODO compress based on predictability of data
@@ -26,6 +26,7 @@ void log() {
 }
 
 void start_log() {
+	baro.begin();
     zero = baro.getAltitude();
 	//start off current time
     currTime=0;

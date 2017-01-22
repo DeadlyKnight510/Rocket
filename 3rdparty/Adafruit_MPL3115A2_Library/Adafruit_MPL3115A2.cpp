@@ -104,6 +104,13 @@ float Adafruit_MPL3115A2::getPressure() {
   return baro;
 }
 
+//ready to transmit something
+bool Adafruit_MPL3115A2::ready() {
+	sta = read8(MPL3115A2_REGISTER_STATUS);
+	delay(10);
+	return !(sta & MPL3115A2_REGISTER_STATUS_PDR);
+}
+
 float Adafruit_MPL3115A2::getAltitude() {
   int32_t alt;
 
@@ -111,12 +118,51 @@ float Adafruit_MPL3115A2::getAltitude() {
 	 MPL3115A2_CTRL_REG1_SBYB |
 	 MPL3115A2_CTRL_REG1_OS128 |
 	 MPL3115A2_CTRL_REG1_ALT);
+	
 
   uint8_t sta = 0;
   while (! (sta & MPL3115A2_REGISTER_STATUS_PDR)) {
     sta = read8(MPL3115A2_REGISTER_STATUS);
     delay(10);
   }
+  Wire.beginTransmission(MPL3115A2_ADDRESS); // start transmission to device 
+  Wire.write(MPL3115A2_REGISTER_PRESSURE_MSB); 
+#ifdef __AVR_ATtiny85__
+  Wire.endTransmission(); // end transmission
+#else
+  Wire.endTransmission(false); // end transmission
+#endif  
+  
+  Wire.requestFrom((uint8_t)MPL3115A2_ADDRESS, (uint8_t)3);// send data n-bytes read
+  alt = Wire.read(); // receive DATA
+  alt <<= 8;
+  alt |= Wire.read(); // receive DATA
+  alt <<= 8;
+  alt |= Wire.read(); // receive DATA
+  alt >>= 4;
+
+  if (alt & 0x800000) {
+    alt |= 0xFF000000;
+  }
+
+  float altitude = alt;
+  altitude /= 16.0;
+  return altitude;
+}
+
+float Adafruit_MPL3115A2::getAltIfReady() {
+  int32_t alt;
+
+  write8(MPL3115A2_CTRL_REG1, 
+	 MPL3115A2_CTRL_REG1_SBYB |
+	 MPL3115A2_CTRL_REG1_OS128 |
+	 MPL3115A2_CTRL_REG1_ALT);
+	
+
+  uint8_t sta = 0;
+  if(!ready()) {
+		return -1;
+	}
   Wire.beginTransmission(MPL3115A2_ADDRESS); // start transmission to device 
   Wire.write(MPL3115A2_REGISTER_PRESSURE_MSB); 
 #ifdef __AVR_ATtiny85__
