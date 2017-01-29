@@ -1,8 +1,8 @@
-#include "log.hpp"
-#include "common.hpp"
-#include "Arduino.h"
-#include "SoftwareSerial.h"
-
+#include "include/log.hpp"
+#include "include/common.hpp"
+#include <Timer.h>
+#include <Adafruit_MPL3115A2.h>
+#include <SoftwareSerial.h>
 SoftwareSerial bluetooth(BLUETOOTH_RX, BLUETOOTH_TX); // RX, TX
 
 void setup() {
@@ -31,5 +31,5 @@ void loop() { // run over and over
             }
         }
     }
-    update_timer();
+   update_timer();
 }
