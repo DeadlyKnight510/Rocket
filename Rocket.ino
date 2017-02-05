@@ -1,7 +1,5 @@
-#include "include/log.hpp"
-#include "include/common.hpp"
+
 #include <Timer.h>
-#include <Adafruit_MPL3115A2.h>
 #include <SoftwareSerial.h>
 SoftwareSerial bluetooth(BLUETOOTH_RX, BLUETOOTH_TX); // RX, TX
 
@@ -13,7 +11,7 @@ void setup() {
 }
 
 void loop() { // run over and over
-    if (bluetooth.available()) {
+    /*if (bluetooth.available()) {
         char in = bluetooth.read();
         //get current height
         if(in == 'C' || in == 'c') bluetooth.print(get_height() - zero); bluetooth.print(" meters");
@@ -30,6 +28,7 @@ void loop() { // run over and over
                 bluetooth.print("m\n");
             }
         }
-    }
+    }*/
+    start_log();
    update_timer();
 }

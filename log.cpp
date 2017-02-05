@@ -1,5 +1,4 @@
-#include "include/common.hpp"
-#include "include/log.hpp"
+
 #include <Timer.h>
 #include <Adafruit_MPL3115A2.h>
 
