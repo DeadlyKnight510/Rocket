@@ -1,21 +1,17 @@
 
 #include <Timer.h>
 #include <Adafruit_MPL3115A2.h>
-
+#include "log.hpp"
+#include "common.hpp"
 //adafruit barometer
 Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
-
-//zeroing the barometer
-float zero;
-
+int tick;
 //variables for logging height during launch
 Timer t;
 int time;
-uint16_t logs[MAX_LOG];
-
-void log() {
+void log_baro() {
 	//TODO compress based on predictability of data
-	if(time => MAX_LOG) {
+	if(time >= MAX_LOG) {
 		t.stop(tick);
 		return;
 	}
@@ -24,17 +20,19 @@ void log() {
 	time++;
 }
 
+void start_baro() {
+    baro.begin();
+}
 void start_log() {
-	baro.begin();
+    start_baro();
     zero = baro.getAltitude();
 	//start off current time
-    currTime=0;
     //logs
-    tick = t.every(LOG_MS, log);
+    tick = t.every(LOG_MS, log_baro);
 }
 
 float get_height() {
-	return baro.getAltitude() - zero;
+  	return baro.getAltitude() - zero;
 }
 
 void update_timer() {
